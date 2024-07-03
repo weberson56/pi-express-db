@@ -9,7 +9,7 @@ var router = express.Router();
     const name = {
     title: "Express",
     name: "weberson",
-    data: [now.getDate(), now.getMonth(), now.getFullYear(),s()].join(' \\ '),
+    data: [now.getDate(), now.getMonth(), now.getFullYear()].join(' \\ '),
     hora: [now.getHours(),now.getMinutes(), now.getSecond].join(' \\ ')
   }
   res.render('index', name);
