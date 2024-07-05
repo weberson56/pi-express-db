@@ -1,11 +1,23 @@
-
-<form action="">
+<h1>{{title}}</h1>
+<form action="/alunos/creat" method="post">
   <div class="mb-3">
-  <label for="formGroupExampleInput" class="form-label">Example label</label>
-  <input type="text" class="form-control" id="formGroupExampleInput" placeholder="Example input placeholder">
+  <label class="form-label">Nome</label>
+  <input type="text" name="nome" class="form-control" value="{{aluno.nome}}" placeholder="Nome do Aluno ">
 </div>
 <div class="mb-3">
-  <label for="formGroupExampleInput2" class="form-label">Another label</label>
-  <input type="text" class="form-control" id="formGroupExampleInput2" placeholder="Another input placeholder">
+  <label class="form-label">Matricula</label>
+  <input type="text" name="matricula" class="form-control" value="{{aluno.matricula}}" placeholder="Numero de matricula do Aluno" minlength="9" maxlength="10">
 </div>
+<div class="mb-3">
+  <label class="form-label">Data de Nascimento</label>
+  <input type="date" name="data_nascimento" class="form-control" value="{{aluno.data_nascimento}}">
+</div>
+<div class="mb-3">
+  <label class="form-label">Email</label>
+  <input type="email" name="email" class="form-control" value="{{aluno.email}}" placeholder="Digita o E-mail do Aluno">
+</div>
+
+
+
+<input type="submit" id="submit" value="{{buttonText}}" >
 </form>
