@@ -11,6 +11,8 @@ var usersRouter = require('./routes/users');
 var sobreRouter = require('./routes/sobre');
 var httpMethodOverrider= require('./middlewares/http-method-overrider');
 
+var apiAlunosRouter = require('./routes/api/apiAlunos');
+
 var app = express();
 
 app.use(bodyParser.urlencoded());
@@ -31,11 +33,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/alunos', alunosRouter);
 app.use('/sobre', sobreRouter);
-
+app.use('/api/v1/alunos',apiAlunosRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
