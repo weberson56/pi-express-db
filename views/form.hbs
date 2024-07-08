@@ -1,6 +1,6 @@
 <h1>{{title}}</h1>
 <form action="/alunos/{{parametro}}" method="POST">
-  <input type="hidden" name="_method" value="methodo">
+  <input type="hidden" name="_method" value="{{metodo}}">
 
   <div class="mb-3">
   <label class="form-label">Nome</label>
@@ -12,11 +12,11 @@
 </div>
 <div class="mb-3">
   <label class="form-label">Data de Nascimento</label>
-  <input type="date" name="data_nascimento" class="form-control" value="{{aluno.data_nascimento}}">
+  <input type="Date" name="data_nascimento" class="form-control" value="{{aluno.data_nascimento}}">
 </div>
 <div class="mb-3">
   <label class="form-label">Email</label>
-  <input type="email" name="email" class="form-control" value="{{aluno.email}}" placeholder="Digita o E-mail do Aluno">
+  <input type="Email" name="email" class="form-control" value="{{aluno.email}}" placeholder="Digita o E-mail do Aluno">
 </div>
 
 

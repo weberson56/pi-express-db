@@ -14,7 +14,8 @@ router.get('/', function(req, res, next) {
 
 router.get('/new', function(_req, res, next) {
     const{heads: labels} = alunos;
-    const data = {title: 'Novo aluno', parametro:"create", metodo: "post", buttonText: 'Adicionar aluno'}
+    const parametro = "create"
+    const data = {title: 'Novo aluno', parametro, metodo: "POST", buttonText: 'Adicionar aluno'}
     
     res.render('form', data);
 });
@@ -47,7 +48,7 @@ router.post('/', function (req, res, next) {
     
 });
 
-router.post('/creat', function(req, res, next) {
+router.post('/create', function(req, res, next) {
     const novoAluno = req.body;
     const matricula = novoAluno.matricula;
 
@@ -79,10 +80,14 @@ router.put('/matricula', function (req, res, next) {
 });
 
 
-router.delete('/', function (req, res, next) {
-    const {body, method} = req;
+router.delete('/:matricula/', function (req, res, next) {
 
-    res.send({body, method, msg:'remover o aluno'});
+    const {matricula} = req.params;
+
+    delete alunos.content[matricula]
+
+    // res.send({body, method, msg:'remover o aluno'});
+    res.redirect(303, '/alunos')
 
 });
 
