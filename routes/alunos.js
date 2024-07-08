@@ -13,7 +13,38 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/new', function(_req, res, next) {
-    res.render('form', {title: 'Novo aluno', buttonText: 'Adicionar aluno'});
+    const{heads: labels} = alunos;
+    const data = {title: 'Novo aluno', parametro:"create", metodo: "post", buttonText: 'Adicionar aluno'}
+    
+    res.render('form', data);
+});
+
+router.get('/:matricula', function(req, res, next) {
+
+    const {matricula} =  req.params;
+
+    const aluno = alunos.content[matricula];
+    
+
+    res.render('card',{title:'Detalhe dos alunos', aluno})
+});
+
+router.get('/edit/:matricula', function(req, res, next) {
+
+    const {matricula} =  req.params;
+
+    const parametro = matricula
+    const aluno = alunos.content[matricula];
+    const data = {aluno, metodo: "put", parametro:"create", title: "editar aluno", buttonText: "salvar alteraçoes"}
+
+    res.render('form', data);
+});
+
+router.post('/', function (req, res, next) {
+    const {body, method} = req;
+
+    res.send({body, method});
+    
 });
 
 router.post('/creat', function(req, res, next) {
@@ -30,36 +61,35 @@ router.post('/creat', function(req, res, next) {
 });
 
 
-router.put('/', function (req, res, next) {
-    
-    res.send(rq.body);
+router.put('/matricula', function (req, res, next) {
+    // const {body, method} = req;
+
+    const {matricula} =  req.params;
+
+    const novoAluno = req.body;
+
+    alunos.content[matricula] = {
+        ...novoAluno, 
+        matricula: Number(matricula)
+    };
+
+    // res.send({body, method, msg:'altera usuario'});
+
+    res.redirect('/alunos');
 });
 
 
 router.delete('/', function (req, res, next) {
-    
-    res.send(rq.body);
+    const {body, method} = req;
+
+    res.send({body, method, msg:'remover o aluno'});
+
 });
 
 
-router.get('/:matricula', function(req, res, next) {
 
-    const {matricula} =  req.params;
 
-    const aluno = alunos.content[matricula];
-    
 
-    res.render('card',{title:'Detalhe dos alunos', aluno})
-});
-
-router.get('/edit/:matricula', function(req, res, next) {
-
-    const {matricula} =  req.params;
-
-    const aluno = alunos.content[matricula];
-
-    res.render('form', {title: 'Editar aluno', buttonText: 'Salvar Alterações', aluno});
-});
 
 module.exports = router;
 
