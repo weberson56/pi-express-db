@@ -1,62 +1,83 @@
 var express = require('express');
-var router = express.Router();
-let alunos = require('../../tests/mocks/alunos.json')
+const db = require('../../config/config_database');
+var router = require('express').Router();
+
 
 /* GET users listing. */
-router.get('/', function(_req, res, next) {
-    const data = {alunos};
-    res.json(data);
+router.get('/', async function (req, res, next) {
+    const query = `select * from alunos`
+
+    try {
+        const data = await db.any(query);
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400).json({ msg: error.massager })
+    }
 });
 
-router.get('/:matricula', function(req, res, next) {
+router.get('/:matricula', async function (req, res, next) {
+    const matricula = req.params.matricula
+    const query = `SELECT * 
+        FROM alunos 
+        WHERE matricula = $1`;
 
-    const {matricula} =  req.params;
+    try {
+        const data = await db.any(query,matricula);
+        res.status(200).json(data);
+    } catch (error) {
+        res.status(400).json({ msg: error.massager })
+    }
+});
 
-    const aluno = alunos.content[matricula];
+router.post('/', async function (req, res, next) {
+
+    const nome = req.body.nome
+    const matricula = req.body.matricula
+    const email = req.body.email
+    const data_nascimento = req.body.data_nascimento
     
+    const query = `INSERT INTO alunos (matricula, nome, email, data_nascimento) 
+            VALUES ($1, $2, $3, $4)`
 
-    res.json('card',{title:'Detalhe dos alunos', aluno})
+    const values =[matricula, nome, email, data_nascimento]
+
+    try {
+        const data = await db.any(query, values)
+        res.status(201).json(data)
+    } catch (error) {
+        res.status(400).json(error)
+    }
+    
 });
 
-router.post('/', function(req, res, next) {
+router.put('/:matricula', function (req, res, next) {
+    const query = `UPDATE alunos 
+            SET alunos (matricula = $1 , nome = $2 ,  email = $3, data_nascimento = $4) 
+            WHERE alunos = $1`
     const novoAluno = req.body;
-    const matricula = novoAluno.matricula;
+    const martricula = Number(req.params.martricula)
 
+    alunos.content[martricula] = {...novoAluno, martricula}
 
-    alunos.content[matricula] = {
-        ...novoAluno,
-        matricula: Number(matricula),
-    };
+    const response = {
+        msg:"aluno criado com sucesso",
+        aluno: alunos.content[martricula]
+    }
 
-    res.redirect('/alunos');
-});
-
-router.put('/matricula', function (req, res, next) {
-    // const {body, method} = req;
-
-    const {matricula} =  req.params;
-
-    const novoAluno = req.body;
-
-    alunos.content[matricula] = {
-        ...novoAluno, 
-        matricula: Number(matricula)
-    };
-
-    // res.send({body, method, msg:'altera usuario'});
-
-    res.redirect('/alunos');
+    res.status(201).json(response)
 });
 
 router.delete('/:matricula/', function (req, res, next) {
-
-    const {matricula} = req.params;
-
-    delete alunos.content[matricula]
-
-    // res.send({body, method, msg:'remover o aluno'});
-    res.redirect(303, '/alunos')
-
+    const query = `DELETE FROM
+        alunos
+        WHERE matricula=$1`
+    const martricula = req.params.matricula;
+    delete alunos.content[martricula]
+    const response = {
+        msg: "aluno removido",
+        martricula
+    }
+    res.status(201).json(response)
 });
 
 
