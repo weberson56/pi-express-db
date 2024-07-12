@@ -4,7 +4,7 @@ var router = require('express').Router();
 
 
 /* GET users listing. */
-router.get('/', async function (req, res, next) {
+router.get('/', async function (_req, res, next) {
     const query = `select * from alunos`
 
     try {
@@ -22,7 +22,7 @@ router.get('/:matricula', async function (req, res, next) {
         WHERE matricula = $1`;
 
     try {
-        const data = await db.any(query,matricula);
+        const data = await db.one(query,matricula);
         res.status(200).json(data);
     } catch (error) {
         res.status(400).json({ msg: error.massager })
@@ -50,34 +50,48 @@ router.post('/', async function (req, res, next) {
     
 });
 
-router.put('/:matricula', function (req, res, next) {
+router.put('/:matricula', async function (req, res, next) {
+
+    const matricula = req.params.matricula
+    const nome = req.body.nome
+    const email = req.body.email
+    const data_nascimento = req.body.data_nascimento
+
+
     const query = `UPDATE alunos 
-            SET alunos (matricula = $1 , nome = $2 ,  email = $3, data_nascimento = $4) 
-            WHERE alunos = $1`
-    const novoAluno = req.body;
-    const martricula = Number(req.params.martricula)
+            SET nome = $2,  email = $3, data_nascimento = $4
+            WHERE matricula = $1`
 
-    alunos.content[martricula] = {...novoAluno, martricula}
 
-    const response = {
-        msg:"aluno criado com sucesso",
-        aluno: alunos.content[martricula]
+
+    const values =[matricula, nome, email, data_nascimento]
+
+    try {
+        const data = await db.any(query, values)
+        res.status(201).json(data)
+    } catch (error) {
+        res.status(400).json(error)
     }
-
-    res.status(201).json(response)
+    
 });
 
-router.delete('/:matricula/', function (req, res, next) {
+router.delete('/:matricula/', async function (req, res, next) {
+
+    const matricula = req.params.matricula
+
     const query = `DELETE FROM
         alunos
-        WHERE matricula=$1`
-    const martricula = req.params.matricula;
-    delete alunos.content[martricula]
-    const response = {
-        msg: "aluno removido",
-        martricula
-    }
-    res.status(201).json(response)
+        WHERE matricula = $1`
+
+        const args = matricula
+
+        try {
+            const data = await db.any(query, args);
+            const msg = "Aluno removido"
+            res.status(200).json(data);
+        } catch (error) {
+            res.status(400).json(error)
+        }
 });
 
 
